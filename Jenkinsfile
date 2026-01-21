@@ -2,7 +2,7 @@ pipeline {
   agent {
     docker {
       image 'playwright/chromium:playwright-1.56.1'
-      args '--user=root --entrypoint=/bin/bash'
+      args '--user=root --entrypoint=""'
     }
   }
 
