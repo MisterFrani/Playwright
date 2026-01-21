@@ -9,6 +9,8 @@ pipeline {
   stages {
     stage('demarrage de configuration projet') {
       steps {
+        // Installer git
+        sh 'apt-get update && apt-get install -y git'
         // Supprimer le repo (si existe) puis cloner
         sh 'rm -rf repo'
         sh 'git clone https://github.com/MisterFrani/Playwright.git repo'
