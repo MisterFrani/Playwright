@@ -8,33 +8,39 @@ pipeline{
         } 
     }
     stages{
-            stage("démarrage de configuration projet"){
-                steps{
-                    //supprimer le fichier repo
-                    sh 'rm -rf repo'
-                }
+        stage("démarrage de configuration projet"){
+            steps{
+                //supprimer le fichier repo
+                sh 'rm -rf repo'
             }
-             stage("clone du projet"){
-                steps{
+        }
+        stage("préparation de l'environnement"){
+            steps{
+                // installer git (nécessaire pour le clone)
+                sh 'apt-get update && apt-get install -y git'
+            }
+        }
+        stage("clone du projet"){
+            steps{
                 //cloner l'adresse git du projet 
-                
                 sh "git clone https://github.com/MisterFrani/Playwright.git repo"
-             }
             }
-             stage(" verification des versions "){
-                steps{
+        }
+        stage(" verification des versions "){
+            steps{
                 //check version de node et playwright
                 sh "node --version"
                 sh "npx playwright --version"
-             }
             }
-             stage("test "){
-                steps{
+        }
+        stage("test "){
+            steps{
                 //acceder au projet repo avec la commannde dir 
-                dir('repo')
-                sh "npm install"
-                sh "npx playwright test --project=chromium"
-             }
-           }
+                dir('repo'){
+                    sh "npm install"
+                    sh "npx playwright test --project=chromium"
+                }
+            }
+        }
     }
 }
