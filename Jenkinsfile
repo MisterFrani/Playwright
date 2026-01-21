@@ -1,4 +1,3 @@
-
 pipeline {
   agent {
     docker {
@@ -10,11 +9,8 @@ pipeline {
   stages {
     stage('demarrage de configuration projet') {
       steps {
-        //Supprimer le repo
+        // Supprimer le repo (si existe) puis cloner
         sh 'rm -rf repo'
-      }
-      steps {
-        // Git clone  du repo
         sh 'git clone https://github.com/MisterFrani/Playwright.git repo'
       }
     }
@@ -22,14 +18,13 @@ pipeline {
     stage('Install package and run test E2E') {
       steps {
         dir('repo') {
-          sh 'echo "node -v"'
-          sh 'echo "npm -v"'
-          sh 'echo "npx playwright --version"'
-          sh 'npm install'
+          sh 'node -v'
+          sh 'npm -v'
+          sh 'npx playwright --version'
+          sh 'npm ci || npm install'
           sh 'npx playwright test --project=chromium'
         }
       }
     }
   }
-
 }
