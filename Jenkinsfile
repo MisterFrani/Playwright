@@ -27,6 +27,7 @@ pipeline{
                 // installer les dépendances dans le dossier repo
                 dir('repo') {
                     sh 'npm install'
+                    sh 'npx playwright install'
                 }
             }
         }
