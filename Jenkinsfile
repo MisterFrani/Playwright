@@ -24,20 +24,25 @@ pipeline{
             steps{
                 //cloner l'adresse git du projet 
                 sh "git clone https://github.com/MisterFrani/Playwright.git repo"
+                // installer les dépendances dans le dossier repo
+                dir('repo') {
+                    sh 'npm install'
+                }
             }
         }
         stage(" verification des versions "){
             steps{
                 //check version de node et playwright
                 sh "node --version"
-                sh "npx playwright --version"
+                dir('repo') {
+                    sh "npx playwright --version"
+                }
             }
         }
         stage("test "){
             steps{
                 //acceder au projet repo avec la commannde dir 
                 dir('repo'){
-                    sh "npm install"
                     sh "npx playwright test --project=chromium"
                 }
             }
