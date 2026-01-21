@@ -10,7 +10,9 @@
   "type": "commonjs",
   "devDependencies": {
     "@playwright/test": "^1.57.0",
-    "@types/node": "^25.0.6"
+    "@types/node": "^25.0.6",
+    "allure-commandline": "^2.36.0",
+    "allure-playwright": "^3.4.4"
   },
   "dependencies": {
     "csv-parse": "^6.1.0"
