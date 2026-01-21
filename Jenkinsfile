@@ -1,25 +1,40 @@
-pipeline {
-  agent {
-    docker {
-      image 'mcr.microsoft.com/playwright:v1.56.1-jammy'
+pipeline{
+    //installer l'environnement 
+    //nodesjs, playwright
+    agent{
+         docker {
+            image 'playwright/chromium:playwright-1.56.1'
+            args '--user=root --entrypoint=""'
+        } 
     }
-  }
-
-  stages {
-    stage('demarrage de configuration projet') {
-      steps {
-        sh 'git clone https://github.com/MisterFrani/Playwright.git'
-      }
+    stages{
+            stage("démarrage de configuration projet"){
+                steps{
+                    //supprimer le fichier repo
+                    sh 'rm -rf repo'
+                }
+            }
+             stage("clone du projet"){
+                steps{
+                //cloner l'adresse git du projet 
+                
+                sh "git clone https://github.com/MisterFrani/Playwright.git repo"
+             }
+            }
+             stage(" verification des versions "){
+                steps{
+                //check version de node et playwright
+                sh "node --version"
+                sh "npx playwright --version"
+             }
+            }
+             stage("test "){
+                steps{
+                //acceder au projet repo avec la commannde dir 
+                dir('repo')
+                sh "npm install"
+                sh "npx playwright test --project=chromium"
+             }
+           }
     }
-
-    stage('Install package and run test E2E') {
-      steps {
-          sh 'node -v'
-          sh 'npm -v'
-          sh 'npx playwright --version'
-          sh 'npm ci || npm install'
-          sh 'npx playwright test --project=chromium'
-      }
-    }
-  }
 }
