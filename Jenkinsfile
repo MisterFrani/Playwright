@@ -62,6 +62,8 @@ pipeline {
       script {
         if (params.testType == 'smoke') {
           build job: 'job_jenkinsfile_2'
+        } else {
+            echo "Je run mon test regression"
         }
       }
     }
