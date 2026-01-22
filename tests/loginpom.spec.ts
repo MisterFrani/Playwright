@@ -24,13 +24,13 @@ test("login valid", { tag: "@valid" }, async ({ page }) => {
 
 });
 
-test("login invalid", { tag: "@test" }, async ({ page }) => {
+test("login invalid", { tag: ["@test", "@regression"] }, async ({ page }) => {
     await loginPage.setUsername("standard_use");
     await loginPage.setPassword("secret_sauc");
     await loginPage.loginBtn();
-    const val=await loginPage.getErrorMessageText();
+    const val = await loginPage.getErrorMessageText();
 
-     expect(val).toContain("Username");
+    expect(val).toContain("Username");
     //await expect(loginPage.getErrorMessageVisible()).toBeTruthy();
 
 });
