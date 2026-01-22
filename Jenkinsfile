@@ -25,12 +25,16 @@ pipeline {
                 sh 'rm -rf repo'
             }
         }
+
+        /*
         stage("préparation de l'environnement") {
             steps {
                 // installer git (nécessaire pour le clone)
                 sh 'apt-get update && apt-get install -y git'
             }
         }
+        */
+        
         stage('clone du projet') {
             steps {
                 //cloner l'adresse git du projet
