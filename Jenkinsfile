@@ -10,7 +10,7 @@ pipeline {
     choice(
       name: 'browser',
       choices: ['chromium', 'firefox', 'webkit'],
-      description: 'Select the browser to run tests on'
+      description: 'Selecionner le navigateur'
     )
     choice(
       name: 'testType',
@@ -31,7 +31,7 @@ pipeline {
         sh 'git clone https://github.com/MisterFrani/Playwright.git repo'
         dir('repo') {
           sh 'npm ci'
-          sh 'npx playwright install --with-deps'
+          sh 'npx playwright install'
         }
       }
     }
@@ -50,7 +50,6 @@ pipeline {
         dir('repo') {
           echo "Running tests on ${params.browser} | type: ${params.testType}"
 
-          // Ici: tu peux brancher smoke/regression si tu utilises des tags / grep / projects dédiés
           sh "npx playwright test --project=${params.browser}"
         }
       }
