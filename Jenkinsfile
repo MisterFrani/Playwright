@@ -54,13 +54,11 @@ pipeline {
                 //acceder au projet repo avec la commannde dir
                 dir('repo') {
                     script {
-                        if (params.browser === 'chromium') {
+                        if (params.browser == 'chromium') {
                             echo 'Running tests on Chromium'
                             sh "npx playwright test --project=${params.browser}"
                         }
                     }
-
-                //sh "npx playwright test --project=${params.browser}"
                 }
             }
         }
