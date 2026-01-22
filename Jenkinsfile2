@@ -65,14 +65,14 @@ pipeline {
                             sh "npx playwright test loginpom --project=${params.browser} --grep '@regression'"
                         }   else if (params.browser == 'firefox') {
                             echo 'Running tests on firefox'
-                            sh "npx playwright test loginpom --project=${params.browser} --grep '@regression'"
                         }   else{
                             echo 'Running tests on webkit'
-                            sh "npx playwright test loginpom --project=${params.browser} --grep '@regression'"
                         }
                     }
                 }
             }
         }
+        
     }
+
 }

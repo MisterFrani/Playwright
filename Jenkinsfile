@@ -15,6 +15,11 @@ pipeline {
             name: 'browser',
             choices: ['chromium', 'firefox', 'webkit'],
             description: 'Select the browser to run tests on'
+        ),
+        choice (
+            name: 'testType',
+            choices: ['smoke', 'regression'],
+            description: 'Selectionner le type de test à exécuter'
         )
     }
 
@@ -74,5 +79,16 @@ pipeline {
                 }
             }
         }
+    }
+
+
+        post {
+            always {
+                if(params.testType == 'smoke') {
+                    dir('repo') {
+                        build job : 'job_jenkinsfile_2'
+                    }
+                }
+            }
     }
 }
