@@ -1,94 +1,69 @@
 pipeline {
-    //installer l'environnement
-    //nodesjs, playwright
-    agent {
-        docker {
-            //image 'playwright/chromium:playwright-1.56.1'
-            image 'mcr.microsoft.com/playwright:v1.57.0-noble'
-        
-            args '--user=root --entrypoint=""'
-        }
+  agent {
+    docker {
+      image 'mcr.microsoft.com/playwright:v1.57.0-noble'
+      args '--user=root --entrypoint=""'
+    }
+  }
+
+  parameters {
+    choice(
+      name: 'browser',
+      choices: ['chromium', 'firefox', 'webkit'],
+      description: 'Select the browser to run tests on'
+    )
+    choice(
+      name: 'testType',
+      choices: ['smoke', 'regression'],
+      description: 'Selectionner le type de test à exécuter'
+    )
+  }
+
+  stages {
+    stage('démarrage de configuration projet') {
+      steps {
+        sh 'rm -rf repo'
+      }
     }
 
-    parameters {
-        choice(
-            name: 'browser',
-            choices: ['chromium', 'firefox', 'webkit'],
-            description: 'Select the browser to run tests on'
-        ),
-        choice (
-            name: 'testType',
-            choices: ['smoke', 'regression'],
-            description: 'Selectionner le type de test à exécuter'
-        )
+    stage('clone du projet') {
+      steps {
+        sh 'git clone https://github.com/MisterFrani/Playwright.git repo'
+        dir('repo') {
+          sh 'npm ci'
+          sh 'npx playwright install --with-deps'
+        }
+      }
     }
 
-    stages {
-        stage('démarrage de configuration projet') {
-            steps {
-                //supprimer le fichier repo
-                sh 'rm -rf repo'
-            }
+    stage('verification des versions') {
+      steps {
+        sh 'node --version'
+        dir('repo') {
+          sh 'npx playwright --version'
         }
-
-        /*
-        stage("préparation de l'environnement") {
-            steps {
-                // installer git (nécessaire pour le clone)
-                sh 'apt-get update && apt-get install -y git'
-            }
-        }
-        */
-
-        stage('clone du projet') {
-            steps {
-                //cloner l'adresse git du projet
-                sh 'git clone https://github.com/MisterFrani/Playwright.git repo'
-                // installer les dépendances dans le dossier repo
-                dir('repo') {
-                    sh 'npm install'
-                    sh 'npx playwright install'
-                }
-            }
-        }
-        stage(' verification des versions ') {
-            steps {
-                //check version de node et playwright
-                sh 'node --version'
-                dir('repo') {
-                    sh 'npx playwright --version'
-                }
-            }
-        }
-        stage('test ') {
-            steps {
-                //acceder au projet repo avec la commannde dir
-                dir('repo') {
-                    script {
-                        if (params.browser == 'chromium') {
-                            echo 'Running tests on Chromium'
-                            sh "npx playwright test --project=${params.browser}"
-                        }   else if (params.browser == 'firefox') {
-                            echo 'Running tests on firefox'
-                            sh "npx playwright test --project=${params.browser}"
-                        }   else{
-                            echo 'Running tests on webkit'
-                            sh "npx playwright test --project=${params.browser}"
-                        }
-                    }
-                }
-            }
-        }
+      }
     }
 
+    stage('tests') {
+      steps {
+        dir('repo') {
+          echo "Running tests on ${params.browser} | type: ${params.testType}"
 
-        post {
-            always {
-                if(params.testType == 'smoke') {
-                    dir('repo') {
-                        build job : 'job_jenkinsfile_2'
-                    }
-                }
-            }
+          // Ici: tu peux brancher smoke/regression si tu utilises des tags / grep / projects dédiés
+          sh "npx playwright test --project=${params.browser}"
+        }
+      }
     }
+  }
+
+  post {
+    always {
+      script {
+        if (params.testType == 'smoke') {
+          build job: 'job_jenkinsfile_2'
+        }
+      }
+    }
+  }
 }
