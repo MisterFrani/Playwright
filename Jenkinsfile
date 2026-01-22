@@ -12,7 +12,6 @@ pipeline {
         choice(
             name: 'browser',
             choices: ['chromium', 'firefox', 'webkit'],
-            defaultValue: 'chromium',
             description: 'Select the browser to run tests on'
         )
     }
