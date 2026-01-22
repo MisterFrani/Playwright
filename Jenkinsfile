@@ -34,7 +34,7 @@ pipeline {
             }
         }
         */
-        
+
         stage('clone du projet') {
             steps {
                 //cloner l'adresse git du projet
@@ -62,6 +62,12 @@ pipeline {
                     script {
                         if (params.browser == 'chromium') {
                             echo 'Running tests on Chromium'
+                            sh "npx playwright test --project=${params.browser}"
+                        }   else if (params.browser == 'firefox') {
+                            echo 'Running tests on firefox'
+                            sh "npx playwright test --project=${params.browser}"
+                        }   else{
+                            echo 'Running tests on webkit'
                             sh "npx playwright test --project=${params.browser}"
                         }
                     }
