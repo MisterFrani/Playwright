@@ -54,10 +54,17 @@ pipeline {
         }
       }
     }
-  }
+
+    stage('generate allure report') {
+      steps {
+        dir('repo') {
+          sh 'npx allure generate allure-results --clean --output allure-report'
+          stash name: 'allure-results', includes: 'allure-results/*'
+        }
+    }
 
   post {
-    always {
+    success  {
       script {
         if (params.testType == '@smoke') {
           build job: 'job_jenkinsfile_2'
