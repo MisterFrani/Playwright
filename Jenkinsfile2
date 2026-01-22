@@ -22,7 +22,7 @@ pipeline {
         stage('démarrage de configuration projet') {
             steps {
                 //supprimer le fichier repo
-                sh 'rm -rf repo'
+                sh 'rm -rf repo2'
             }
         }
 
@@ -38,9 +38,9 @@ pipeline {
         stage('clone du projet') {
             steps {
                 //cloner l'adresse git du projet
-                sh 'git clone https://github.com/MisterFrani/Playwright.git repo'
+                sh 'git clone https://github.com/MisterFrani/Playwright.git repo2'
                 // installer les dépendances dans le dossier repo
-                dir('repo') {
+                dir('repo2') {
                     sh 'npm install'
                     sh 'npx playwright install'
                 }
@@ -50,7 +50,7 @@ pipeline {
             steps {
                 //check version de node et playwright
                 sh 'node --version'
-                dir('repo') {
+                dir('repo2') {
                     sh 'npx playwright --version'
                 }
             }
@@ -58,7 +58,7 @@ pipeline {
         stage('test E2E') {
             steps {
                 //acceder au projet repo avec la commannde dir
-                dir('repo') {
+                dir('repo2') {
                     script {
                         if (params.browser == 'chromium') {
                             echo 'Running tests on Chromium'

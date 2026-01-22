@@ -14,7 +14,7 @@ pipeline {
     )
     choice(
       name: 'testType',
-      choices: ['smoke', 'regression'],
+      choices: ['@smoke', '@regression'],
       description: 'Selectionner le type de test à exécuter'
     )
   }
@@ -59,7 +59,7 @@ pipeline {
   post {
     always {
       script {
-        if (params.testType == 'smoke') {
+        if (params.testType == '@smoke') {
           build job: 'job_jenkinsfile_2'
         } else {
             echo "Je run mon test regression"
