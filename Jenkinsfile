@@ -62,7 +62,7 @@ pipeline {
           stash name: 'allure-results', includes: 'allure-results/*'
         }
     }
-
+/*
   post {
     success  {
       script {
@@ -74,4 +74,6 @@ pipeline {
       }
     }
   }
+*/
+
 }
