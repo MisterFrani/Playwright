@@ -50,12 +50,15 @@ pipeline {
         always {
             script {
                 if(params.ALLURE) {
-                    sh 'rm -rf allure-results/*'
-                    unstash 'allure-results'
+                    dir('repo') {
+                        sh 'rm -rf allure-results/*'
+                         unstash 'allure-results'
                     archiveArtifacts 'allure-results/*'
                     allure includeProperties: false,
                            jdk: '',
                            results: [[path: 'allure-results/']]
+                    }
+                   
                 }
             }
         }
